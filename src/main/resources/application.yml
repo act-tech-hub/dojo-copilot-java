@@ -1,0 +1,24 @@
+
+
+#logging.level.springfox=debug
+
+#springdoc.swagger-ui.path=/swagger
+#spring.mvc.pathmatch.matching-strategy=ant_path_matcher
+
+#spring.main.allow-bean-definition-overriding=true
+server:
+  servlet:
+    context-path: /api
+  port: 8080
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger
