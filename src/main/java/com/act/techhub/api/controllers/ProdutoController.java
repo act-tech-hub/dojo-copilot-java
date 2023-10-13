@@ -1,21 +1,17 @@
 package com.act.techhub.api.controllers;
 
-import com.act.techhub.api.model.Cliente;
 import com.act.techhub.api.model.Produto;
-import com.act.techhub.api.service.ClienteService;
 import com.act.techhub.api.service.ProdutoService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Produtos", description = "API de Gerenciamento de produtos")
+@Api(value = "Produto", tags = {"Produto Controller"}, protocols = "http")
 @RestController
 @RequestMapping(value = "/produtos")
 public class ProdutoController {
@@ -24,20 +20,16 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Busca um produto pelo ID",
-            responses = {
-                    @ApiResponse(description = "Produto encontrado", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "Produto não encontrado")
-            })
+    @ApiOperation(value = "Busca um produto pelo ID", response = Produto.class)
     public ResponseEntity getProdutoById(
-            @Parameter(description = "ID do produto para buscar", required = true)
+            @ApiParam(value = "ID do produto para buscar", required = true)
             @PathVariable int id) {
         Produto produto = produtoService.getProdutoByIdList(id);
         return ResponseEntity.ok(produto);
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os Produtos")
+    @ApiOperation(value = "Listar todos os produtos", response = Produto.class, responseContainer = "List")
     public ResponseEntity getAllProdutos() {
         System.out.println("chamando método getAllProdutos");
         List<Produto> produtos = produtoService.getAllProdutos();
@@ -45,13 +37,18 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addCliente(@RequestBody Produto produto) {
+    @ApiOperation(value = "Adicionar um produto", response = String.class)
+    public ResponseEntity<String> addCliente(@ApiParam(value = "Recebe um objeto do tipo Prodotu", required = true)
+                                                 @RequestBody Produto produto) {
         produtoService.addProduto(produto);
         return ResponseEntity.ok("Produto adicionado com sucesso!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduto(@PathVariable int id, @RequestBody Produto updatedProduto) {
+    @ApiOperation(value = "Atualizar um produto", response = String.class)
+    public ResponseEntity<String> updateProduto(
+            @ApiParam(value = "ID do produto para atualizar", required = true)
+            @PathVariable int id, @RequestBody Produto updatedProduto) {
         if (produtoService.getProdutoById(id).isPresent()) {
             produtoService.updateProduto(id, updatedProduto);
             return ResponseEntity.ok("Produto atualizado com sucesso!");
@@ -61,10 +58,13 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduto(@PathVariable int id) {
+    @ApiOperation(value = "Deletar um produto", response = String.class)
+    public ResponseEntity<String> deleteProduto(
+            @ApiParam(value = "ID do produto a ser removido", required = true)
+            @PathVariable int id) {
         if (produtoService.getProdutoById(id).isPresent()) {
             produtoService.deleteCliente(id);
-            return ResponseEntity.ok("Cliente deletado com sucesso!");
+            return ResponseEntity.ok("Produto removido com sucesso!");
         } else {
             return ResponseEntity.notFound().build();
         }

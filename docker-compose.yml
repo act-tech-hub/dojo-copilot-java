@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  api-cliente:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: api-cliente:latest
+    ports:
+      - "8080:8080"

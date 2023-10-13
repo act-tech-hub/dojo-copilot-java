@@ -16,9 +16,14 @@ public class ProdutoService {
     private List<Produto> produtos = new ArrayList<>();
     //private NumberFormat numberFormat = new NumberFormat(Locale.US.getCountry());
 
-    public ProdutoService() {
+    /*public ProdutoService() {
         produtos.add(new Produto(1, "Camiseta Thor", new BigDecimal(59.90).setScale(2, BigDecimal.ROUND_CEILING), 125));
         produtos.add(new Produto(2, "Camiseta Maranha", new BigDecimal(49.90).setScale(2, BigDecimal.ROUND_CEILING), 200));
+    }*/
+
+    public ProdutoService() {
+      produtos.add(new Produto(1, "Cadeira Gamer", new BigDecimal("1200.00"), 10));
+      produtos.add(new Produto(2, "Mesa Gamer", new BigDecimal("1500.00"), 5));
     }
 
     public List<Produto> getAllProdutos() {

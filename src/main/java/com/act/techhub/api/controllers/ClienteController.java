@@ -1,20 +1,19 @@
 package com.act.techhub.api.controllers;
 
+import com.act.techhub.api.controllers.request.ClienteRequest;
 import com.act.techhub.api.model.Cliente;
 
 import com.act.techhub.api.service.ClienteService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Clientes", description = "API de Gerenciamento de clientes")
+@Api(value = "Cliente", tags = {"Cliente Controller"}, protocols = "http")
 @RestController
 @RequestMapping(value = "/clientes")
 public class ClienteController {
@@ -23,20 +22,16 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Busca um cliente pelo ID",
-            responses = {
-                    @ApiResponse(description = "Cliente encontrado", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
-            })
+    @ApiOperation(value = "Busca um cliente pelo ID", response = Cliente.class)
     public ResponseEntity getClienteById(
-            @Parameter(description = "ID do cliente para buscar", required = true)
+            @ApiParam(value = "ID do cliente para buscar", required = true)
             @PathVariable int id) {
         Cliente cliente = clienteService.getClienteByIdList(id);
         return ResponseEntity.ok(cliente);
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os Clientes")
+    @ApiOperation(value = "Listar todos os clientes", response = Cliente.class, responseContainer = "List")
     public ResponseEntity getAllClientes() {
         System.out.println("chamando método getAllClientes");
         List<Cliente> clientes = clienteService.getAllClientes();
@@ -44,8 +39,9 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addCliente(@RequestBody Cliente cliente) {
-        clienteService.addCliente(cliente);
+    @ApiOperation(value = "Adicionar um cliente", response = String.class)
+    public ResponseEntity<String> addCliente(@RequestBody ClienteRequest request) {
+        clienteService.addCliente(request);
         return ResponseEntity.ok("Cliente adicionado com sucesso!");
     }
 
